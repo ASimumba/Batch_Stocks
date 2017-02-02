@@ -1,2 +1,2 @@
 # Batch_Stocks
-Fetching stock returns for more than one stock  and the follow-up analysis
+Dealing with multiple stocks and the follow-up analysis
