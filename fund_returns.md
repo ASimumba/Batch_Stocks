@@ -1,4 +1,4 @@
-Analysis Fund Returns
+Analysing Fund Returns
 ================
 Aaron Simumba
 2017-02-03

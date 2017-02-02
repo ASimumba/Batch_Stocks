@@ -1,5 +1,5 @@
 ---
-title: "Analysis Fund Returns"
+title: "Analysing Fund Returns"
 author: "Aaron Simumba"
 date: "`r Sys.Date()`"
 output: github_document
