@@ -1,33 +1,17 @@
-Analysing Fund Returns
+Portfolio Analysis
 ================
 Aaron Simumba
-2017-02-03
+2017-02-06
 
-    ## Loading required package: xts
-
-    ## Loading required package: zoo
-
-    ## 
-    ## Attaching package: 'zoo'
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     as.Date, as.Date.numeric
-
-    ## Loading required package: TTR
-
-    ## Version 0.4-0 included new data defaults. See ?getSymbols.
-
-    ## Highcharts (www.highcharts.com) is a Highsoft software product which is
-
-    ## not free for commercial and Governmental use
-
-    ## 
-    ## Attaching package: 'PerformanceAnalytics'
-
-    ## The following object is masked from 'package:graphics':
-    ## 
-    ##     legend
+``` r
+## Packages to load
+library(quantmod)
+library(ggplot2) 
+library(xts)
+library(highcharter)
+library(PerformanceAnalytics)
+library(dygraphs)
+```
 
 ``` r
 #loading the data
@@ -131,12 +115,6 @@ ggplot(data = fundreturn_final, aes(x=Year, y=PercentageReturn, color=Stockticke
 # GOOG
 GOOG <- subset(fundreturn_final, Stockticker=="GOOG")
 g <- ggplot(data = GOOG, aes(x=Year, y=PercentageReturn)) +geom_line()
-g
-```
-
-![](fund_returns_files/figure-markdown_github/unnamed-chunk-5-1.png)
-
-``` r
 # add features
 g <- g + ggtitle("Google Monthly Return", subtitle = "For the Period between June 2007 - Nov. 2016") + 
       theme(panel.background = element_rect(fill = "white", colour = "grey50"),
@@ -151,7 +129,7 @@ g + annotate("text",x=as.Date("2009-09-01"),y=0.3245,label="HR",fontface="bold",
 annotate("text",x=as.Date("2010-04-01"),y=-0.1900,label="LR",fontface="bold",size=3,colour ="red") 
 ```
 
-![](fund_returns_files/figure-markdown_github/unnamed-chunk-5-2.png)
+![](fund_returns_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
 ``` r
 # Portfolio Performance Appraisal
@@ -243,31 +221,12 @@ dygraph(dollar_growth, main = "Growth of $1 Invested in Portfolio") %>%
 
 ``` r
 # Calculating the Sharpe Ratio
-
-# Method 1: use the Return.excess function from Performance Analytics package, 
-# then calculate the Sharpe Ratio manually.
-portfolio_excess_returns <- Return.excess(monthly_P_return, Rf = .0003)
-print(sharpe_ratio_manual <- round(mean(portfolio_excess_returns)/StdDev(portfolio_excess_returns), 4))
+# Taking the US 10 Year Treasury Rate of 2.40% as the risk free rate.
+# Making use of the built in SharpeRatio function in Performance Analytics package.
+print(sharpe_ratio <- round(SharpeRatio(monthly_P_return, Rf = 0.024), 4))
 ```
 
-    ##          [,1]
-    ## StdDev 0.2656
-
-``` r
-# If we wanted to use the original, 1966 formulation of the Sharpe Ratio, there is one small 
-# change to the code in Method 1.
-print(sharpe_ratio_manual_1966 <- round(mean(portfolio_excess_returns)/StdDev(monthly_P_return), 4))
-```
-
-    ##          [,1]
-    ## StdDev 0.2656
-
-``` r
-# Method 2: use the built in SharpeRatio function in Performance Analytics package.
-print(sharpe_ratio <- round(SharpeRatio(monthly_P_return, Rf = .0003), 4))
-```
-
-    ##                               portfolio.returns
-    ## StdDev Sharpe (Rf=0%, p=95%):            0.2656
-    ## VaR Sharpe (Rf=0%, p=95%):               0.1777
-    ## ES Sharpe (Rf=0%, p=95%):                0.1250
+    ##                                 portfolio.returns
+    ## StdDev Sharpe (Rf=2.4%, p=95%):           -0.0634
+    ## VaR Sharpe (Rf=2.4%, p=95%):              -0.0424
+    ## ES Sharpe (Rf=2.4%, p=95%):               -0.0298

@@ -1,11 +1,11 @@
 ---
-title: "Analysing Fund Returns"
+title: "Portfolio Analysis"
 author: "Aaron Simumba"
 date: "`r Sys.Date()`"
 output: github_document
 ---
 
-```{r, echo=FALSE}
+```{r,results='hide',message=FALSE}
 ## Packages to load
 library(quantmod)
 library(ggplot2) 
@@ -63,7 +63,6 @@ ggplot(data = fundreturn_final, aes(x=Year, y=PercentageReturn, color=Stockticke
 # GOOG
 GOOG <- subset(fundreturn_final, Stockticker=="GOOG")
 g <- ggplot(data = GOOG, aes(x=Year, y=PercentageReturn)) +geom_line()
-g
 # add features
 g <- g + ggtitle("Google Monthly Return", subtitle = "For the Period between June 2007 - Nov. 2016") + 
       theme(panel.background = element_rect(fill = "white", colour = "grey50"),
@@ -168,18 +167,9 @@ dygraph(dollar_growth, main = "Growth of $1 Invested in Portfolio") %>%
 
 ```{r}
 # Calculating the Sharpe Ratio
-
-# Method 1: use the Return.excess function from Performance Analytics package, 
-# then calculate the Sharpe Ratio manually.
-portfolio_excess_returns <- Return.excess(monthly_P_return, Rf = .0003)
-print(sharpe_ratio_manual <- round(mean(portfolio_excess_returns)/StdDev(portfolio_excess_returns), 4))
-
-# If we wanted to use the original, 1966 formulation of the Sharpe Ratio, there is one small 
-# change to the code in Method 1.
-print(sharpe_ratio_manual_1966 <- round(mean(portfolio_excess_returns)/StdDev(monthly_P_return), 4))
-
-# Method 2: use the built in SharpeRatio function in Performance Analytics package.
-print(sharpe_ratio <- round(SharpeRatio(monthly_P_return, Rf = .0003), 4))
+# Taking the US 10 Year Treasury Rate of 2.40% as the risk free rate.
+# Making use of the built in SharpeRatio function in Performance Analytics package.
+print(sharpe_ratio <- round(SharpeRatio(monthly_P_return, Rf = 0.024), 4))
 
 ```
 
